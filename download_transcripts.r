@@ -72,7 +72,7 @@ map(document_ids,function(x){
                url %>%
                read_file()
   )
-  write_file(res,path=paste0('./data/',.x,'.xml'))
+  write_file(res,path=paste0('./data/',x,'.xml'))
   pb$tick()
 }
 )
