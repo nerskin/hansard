@@ -1,8 +1,7 @@
+#! /usr/bin/env Rscript
+
 #Script to download transcripts from the NSW Hansard.
 #Uses API documented at http://parliament-api-docs.readthedocs.io/en/latest/new-south-wales/#get-hansard-by-year
-
-
-
 library(purrr)
 library(readr)
 library(stringr)
@@ -10,11 +9,11 @@ library(progress)
 suppressMessages(library(jsonlite))
 suppressMessages(library(lubridate))
 
+args <- commandArgs(trailingOnly=TRUE)
 
+begin <- ymd(args[1])
 
-begin <- ymd('2010-01-01')
-
-end <- ymd('2010-06-01')
+end <- ymd(args[2])
 
 days <- seq(begin,end,1) %>%
   as.character()
@@ -67,12 +66,14 @@ pb <- progress_bar$new(
   total = length(document_ids),clear=FALSE,width=60
 )
 
-map(document_ids,function(x){
+walk(document_ids,function(x){
   res <- try(transcript_url(x) %>%
                url %>%
                read_file()
   )
+  if (class(res) == 'character'){
   write_file(res,path=paste0('./data/',x,'.xml'))
+  }
   pb$tick()
 }
 )
