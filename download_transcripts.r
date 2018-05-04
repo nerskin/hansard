@@ -66,6 +66,10 @@ pb <- progress_bar$new(
   total = length(document_ids),clear=FALSE,width=60
 )
 
+if (length(document_ids) == 0){
+	cat('No more documents to download\n')
+}
+
 walk(document_ids,function(x){
   res <- try(transcript_url(x) %>%
                url %>%
